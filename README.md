@@ -243,3 +243,18 @@ curl -i -X DELETE http://localhost:3000/admin/api/Projects/1/Tags/3
   "data": {}
 }
 ```
+
+### PUT /api/Projects/1/Tags/1
+
+Create a new association between instances
+
+```console
+curl -i -X PUT http://localhost:3000/admin/api/Projects/1/Tags/3
+```
+
+```js
+{
+  "status": "success",
+  "data": {}
+}
+```
