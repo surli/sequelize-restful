@@ -41,7 +41,14 @@ http.createServer(app).listen(app.get('port'), function(){
   // Description: Define which models will be exposed through the restful API
   // Default:     'new Array()' if it is an Empty array, all the models will be exposed by default
 
-  allowed: new Array('Model0', 'Model1', 'Model2')
+  allowed: new Array('Model0', 'Model1', 'Model2'),
+
+  // Parameter:   extendedMode
+  // Description: If it's true, all GET request uses the findAndCountAll function of Sequelize, 
+  //              returning the count on the response. If it's false uses the default findAll.
+  // Default:     true
+
+  extendedMode: true
 }
 ```
 
