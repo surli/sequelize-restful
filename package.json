@@ -1,16 +1,16 @@
 {
-  "name": "sequelize-restful",
-  "version": "0.3.0",
-  "description": "A connect module that adds a restful API for all defined models to your application.",
+  "name": "sequelize-restful-extended",
+  "version": "0.1.0",
+  "description": "A connect module that adds a restful API for all defined models to your application. Also allows to perform more complex operations",
   "main": "lib/index.js",
   "scripts": {
     "test": "node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/sequelize/sequelize-restful.git"
+    "url": "git://github.com/sequelize-restful-extended.git"
   },
-  "author": "",
+  "author": "Pablo Anaya",
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
