@@ -1,5 +1,7 @@
 # sequelize-restful-extended
 
+[![Build Status](https://travis-ci.org/pjanaya/sequelize-restful-extended.svg?branch=master)](https://travis-ci.org/pjanaya/sequelize-restful-extended)
+
 A connect module based on a fork of sequelize-restful. Creates a restful API with associations from your Sequelize models and allows you to include parameters like `sort`, `offset`, `limit` and `order`. Also allows to filter by date ranges. 
 
 It uses the Sequelize function `findAndCountAll` instead of `findAll`. Thanks to this, the basic GET request returns the total count of rows in the response. This number doesn't take account of the query parameters `offset` and `limit`. This feature makes easier to do pagination using the generated API.    
