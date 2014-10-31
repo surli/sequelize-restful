@@ -147,6 +147,39 @@ $ curl http://localhost:3000/api/Tags
 }
 ```
 
+### GET /api/Tags?sort=-title
+
+Returns all Tags sorted by title descending
+
+```console
+$ curl http://localhost:3000/api/Tags?sort=-title
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  }]
+}
+```
 
 ### GET /api/Tags?title=foo
 
