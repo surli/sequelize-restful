@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/pjanaya/sequelize-restful-extended.svg?branch=master)](https://travis-ci.org/pjanaya/sequelize-restful-extended)
 
-A connect module based on a fork of sequelize-restful. Creates a restful API with associations from your Sequelize models and allows you to include parameters like `sort`, `offset`, `limit` and `order`. Also allows to filter by date ranges and use of LIKE for text fields.
+A connect module based on a fork of sequelize-restful. Creates a restful API with associations from your Sequelize models and allows you to include parameters like `sort`, `offset`, `limit` and `order`. It also allows more complex operations like data range filters or include WHERE LIKE fields in SELECT operations.
 
 It uses the Sequelize function `findAndCountAll` instead of `findAll`. Thanks to this, the basic GET request returns the total count of rows in the response. This number doesn't take account of the query parameters `offset` and `limit`. This feature makes easier to do pagination using the generated API.    
 
@@ -212,6 +212,40 @@ $ curl http://localhost:3000/api/Tags?title=foo
 }
 ```
 
+### GET /api/Tags?title_like=foo
+
+Returns all Tags where title is LIKE foo (in this example, all of them)
+
+```console
+$ curl http://localhost:3000/api/Tags?title_like=foo
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  }]
+}
+```
+
 ### GET /api/Tags?limit=2
 
 Returns the first two tags (Notice the count attribute in the response indicating the total tags)
@@ -224,13 +258,19 @@ $ curl http://localhost:3000/api/Tags?limit=2
 {
   "status": "success",
   "count": 3,
-  "data": {
-    "title": "foo3",
-    "id": 3,
-    "createdAt": "2013-02-11T09:48:14.000Z",
-    "updatedAt": "2013-02-11T09:48:14.000Z",
+  "data": [{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
     "ProjectId": 2
-  }
+  }]
 }
 ```
 
