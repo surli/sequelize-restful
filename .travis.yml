@@ -6,7 +6,7 @@ script:
 
 notifications:
   email:
-    - sascha@depold.com
+    - pjanaya@gmail.com
   irc:
     - "chat.freenode.net#sequelizejs"
 

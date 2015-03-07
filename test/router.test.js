@@ -48,7 +48,7 @@ describe('Router', function() {
         it('returns an empty array if no table entries were created before', function(done) {
           this.router.handleRequest({ method: 'GET', path: '/api/photos', body: null }, function(response) {
             expect(response.status).to.equal('success')
-            expect(response.data).to.eql([])
+            expect(response.data).to.eql({count: 0, rows: []})
             done()
           })
         })

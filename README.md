@@ -1,6 +1,10 @@
-# sequelize-restful-associations
+# sequelize-restful-extended
 
-A connect module based on a fork of sequelize-restful that adds a one level of associative capability to a restful API. It also lets you define which model should be exposed through this restful API.
+[![Build Status](https://travis-ci.org/pjanaya/sequelize-restful-extended.svg?branch=master)](https://travis-ci.org/pjanaya/sequelize-restful-extended)
+
+A connect module based on a fork of sequelize-restful. Creates a restful API with associations from your Sequelize models and allows you to include parameters like `sort`, `offset`, `limit` and `order`. It also allows more complex operations like data range filters or include WHERE LIKE fields in SELECT operations.
+
+It uses the Sequelize function `findAndCountAll` instead of `findAll`. Thanks to this, the basic GET request returns the total count of rows in the response. This number doesn't take account of the query parameters `offset` and `limit`. This feature makes easier to do pagination using the generated API.    
 
 ## Usage
 
@@ -8,7 +12,7 @@ A connect module based on a fork of sequelize-restful that adds a one level of a
 var express   = require('express')
   , Sequelize = require('sequelize')
   , http      = require('http')
-  , restful   = require('sequelize-restful')
+  , restful   = require('sequelize-restful-extended')
   , sequelize = new Sequelize('database', 'username', 'password')
   , app       = express()
 
@@ -37,7 +41,14 @@ http.createServer(app).listen(app.get('port'), function(){
   // Description: Define which models will be exposed through the restful API
   // Default:     'new Array()' if it is an Empty array, all the models will be exposed by default
 
-  allowed: new Array('Model0', 'Model1', 'Model2')
+  allowed: new Array('Model0', 'Model1', 'Model2'),
+
+  // Parameter:   extendedMode
+  // Description: If it's true, all GET request uses the findAndCountAll function of Sequelize, 
+  //              returning the count on the response. If it's false uses the default findAll.
+  // Default:     true
+
+  extendedMode: true
 }
 ```
 
@@ -53,7 +64,7 @@ $ curl http://localhost:3000/api
 
 ```js
 {
-  "status": "success",
+  "status": "success"
   "data": [
     {
       "name": "Tag",
@@ -107,6 +118,202 @@ The result of the request is part of the response headers! The header's name is 
         "type": "INTEGER"
       }
     }
+  }
+}
+```
+
+### GET /api/Tags
+
+Returns all Tags
+
+```console
+$ curl http://localhost:3000/api/Tags
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  }]
+}
+```
+
+### GET /api/Tags?sort=-title
+
+Returns all Tags sorted by title descending
+
+```console
+$ curl http://localhost:3000/api/Tags?sort=-title
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  }]
+}
+```
+
+### GET /api/Tags?title=foo
+
+Returns all Tags where title is foo
+
+```console
+$ curl http://localhost:3000/api/Tags?title=foo
+```
+
+```js
+{
+  "status": "success",
+  "count": 1,
+  "data": {
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  }
+}
+```
+
+### GET /api/Tags?title_like=foo
+
+Returns all Tags where title is LIKE foo (in this example, all of them)
+
+```console
+$ curl http://localhost:3000/api/Tags?title_like=foo
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  },{
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  }]
+}
+```
+
+### GET /api/Tags?limit=2
+
+Returns the first two tags (Notice the count attribute in the response indicating the total tags)
+
+```console
+$ curl http://localhost:3000/api/Tags?limit=2
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": [{
+    "title": "foo",
+    "id": 1,
+    "createdAt": "2013-02-09T09:48:14.000Z",
+    "updatedAt": "2013-02-09T09:48:14.000Z",
+    "ProjectId": 1
+  },{
+    "title": "foo2",
+    "id": 2,
+    "createdAt": "2013-02-10T09:48:14.000Z",
+    "updatedAt": "2013-02-10T09:48:14.000Z",
+    "ProjectId": 2
+  }]
+}
+```
+
+
+### GET /api/Tags?limit=2&offset=2
+
+Returns the first two tags after a specific amount of elements (Notice the count attribute in the response indicating the total tags)
+
+```console
+$ curl http://localhost:3000/api/Tags?limit=2&offset=2
+```
+
+```js
+{
+  "status": "success",
+  "count": 3,
+  "data": {
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
+  }
+}
+```
+### GET /api/Tags?createdAt_start=2013-02-11&createdAt_end=2013-02-12
+
+Returns all tags created between two dates
+
+```console
+$ curl http://localhost:3000/api/Tags?createdAt_start=2013-02-11&createdAt_end=2013-02-12
+```
+
+```js
+{
+  "status": "success",
+  "count": 1,
+  "data": {
+    "title": "foo3",
+    "id": 3,
+    "createdAt": "2013-02-11T09:48:14.000Z",
+    "updatedAt": "2013-02-11T09:48:14.000Z",
+    "ProjectId": 2
   }
 }
 ```
