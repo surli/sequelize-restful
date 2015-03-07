@@ -315,6 +315,25 @@ describe('Router', function() {
             })
           })
         })
+        
+        describe('PUT', function() {
+          it("adds the association", function(done) {
+            var self = this
+
+            this.router.handleRequest({
+              method: 'PUT',
+              path:   "/api/photographers/" + this.photographer.id + "/photos/" + this.photo.id,
+              body:   null
+            }, function(response) {
+              expect(response.status).to.equal('success')
+
+              self.photo.reload().success(function(photo) {
+                expect(photo.photographerId).to.be.ok()
+                done()
+              })
+            })
+          })
+        })
       })
     })
   })
