@@ -1,10 +1,14 @@
-# sequelize-restful-extended
+# sequelize-restful [![Build Status](https://secure.travis-ci.org/sequelize/sequelize-restful.png)](http://travis-ci.org/sequelize/sequelize-restful)
 
 [![Build Status](https://travis-ci.org/pjanaya/sequelize-restful-extended.svg?branch=master)](https://travis-ci.org/pjanaya/sequelize-restful-extended)
 
 A connect module based on a fork of sequelize-restful. Creates a restful API with associations from your Sequelize models and allows you to include parameters like `sort`, `offset`, `limit` and `order`. It also allows more complex operations like data range filters or include WHERE LIKE fields in SELECT operations.
 
 It uses the Sequelize function `findAndCountAll` instead of `findAll`. Thanks to this, the basic GET request returns the total count of rows in the response. This number doesn't take account of the query parameters `offset` and `limit`. This feature makes easier to do pagination using the generated API.    
+
+## Unmaintained
+
+This project is not actively developed/maintained. As a result of that, you won't be able to create issues any longer. I will happily merge pull requests, though. Please consider using [epilogue](https://github.com/dchester/epilogue).
 
 ## Usage
 
@@ -381,6 +385,17 @@ It returns the updated record
   }
 }
 ```
+
+### PATCH /api/Tags/1
+
+Updating an already existing instance of a model
+
+```console
+curl -d "title=fnord" -X PATCH http://localhost:3000/api/Tags/1
+```
+
+Is processed and returns updated record equivalent to [PUT /api/Tags/1](#put-apitags1).
+
 
 ### DELETE /api/Tags/1
 
